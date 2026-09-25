@@ -1,6 +1,7 @@
 import {NestFactory} from '@nestjs/core';
 import {AppModule, ObserveInstrument} from './app.module.js';
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
+import {ValidationPipe} from "@nestjs/common";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
@@ -9,6 +10,14 @@ async function bootstrap() {
 
     app.enableCors();
 
+    app.useGlobalPipes(new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+        transformOptions: {enableImplicitConversion: true}
+    }));
+
+    //region swagger setup
     // Configure Swagger document options
     const config = new DocumentBuilder()
         .setTitle('nest js App')
@@ -20,6 +29,7 @@ async function bootstrap() {
     // Create and setup the document
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, documentFactory);
+    //endregion
 
     await app.listen(process.env.PORT ?? 3000);
 
