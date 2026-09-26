@@ -1,21 +1,34 @@
-import { Module } from '@nestjs/common';
-import { createObserveModule } from '@nestjs/observe';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
+import {Module} from '@nestjs/common';
+import {createObserveModule} from '@nestjs/observe';
+import {AppController} from './app.controller.js';
+import {AppService} from './app.service.js';
+import {BlogModule} from './blog/blog.module.js';
+import {ConfigModule, ConfigService} from "@nestjs/config";
+import {MongooseModule} from "@nestjs/mongoose";
 
-export const { ObserveModule, ObserveInstrument } = createObserveModule();
+export const {ObserveModule, ObserveInstrument} = createObserveModule();
 
 @Module({
-  imports: [
-    // Distributed tracing, auto-correlated logs, request/job metrics, error
-    // telemetry, alarms, and more — out of the box. Sign up at https://observe.nestjs.com
-    ObserveModule.forRoot({
-      appKey: 'YOUR_APP_KEY',
-      appSecret: 'YOUR_APP_SECRET',
-      serviceId: 'maktab-course-swagger',
-    }),
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [
+        ConfigModule.forRoot({
+            isGlobal: true, // Makes the module available globally across your app
+        }),
+        MongooseModule.forRootAsync({
+            imports: [ConfigModule],
+            useFactory: async (configService: ConfigService) => ({
+                uri: configService.get<string>('MONGODB_URI'),
+            }),
+            inject: [ConfigService],
+        }),
+        ObserveModule.forRoot({
+            appKey: 'YOUR_APP_KEY',
+            appSecret: 'YOUR_APP_SECRET',
+            serviceId: 'maktab-course-swagger',
+        }),
+        BlogModule,
+    ],
+    controllers: [AppController],
+    providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+}
