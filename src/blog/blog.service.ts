@@ -2,9 +2,10 @@ import {CreateBlogDto} from "./dto/createBlog.dto.js";
 import {InjectModel} from "@nestjs/mongoose";
 import {Blog} from "./schemas/blog.schema.js";
 import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common";
-import {Model} from 'mongoose';
+import {Model , QueryFilter} from 'mongoose';
 import {UpdateBlogDto} from "./dto/updateBlog.dto.js";
 import {QueryBlogDto} from "./dto/queryBlog.dto.js";
+
 
 @Injectable()
 export class BlogService {
@@ -15,11 +16,17 @@ export class BlogService {
 
     async getAll(query: QueryBlogDto) {
 
-        const {page, limit} = query;
+        const {page = 1, limit = 10 , title} = query;
+
+        const searchQuery:QueryFilter<Blog> = {}
+
+        if (title){
+            searchQuery.title = {$regex:title , $options:"i"};
+        }
 
         try {
-            const blogsCount = await this.blogModel.countDocuments();
-            const blog = await this.blogModel.find().skip(page - 1).limit(limit);
+            const blogsCount = await this.blogModel.countDocuments(searchQuery);
+            const blog = await this.blogModel.find(searchQuery).skip(page - 1).limit(limit);
             return {blogsCount, blog}
         } catch (e) {
             throw new NotFoundException()
