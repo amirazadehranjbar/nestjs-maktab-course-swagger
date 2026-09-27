@@ -4,6 +4,7 @@ import {Blog} from "./schemas/blog.schema.js";
 import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common";
 import {Model} from 'mongoose';
 import {UpdateBlogDto} from "./dto/updateBlog.dto.js";
+import {QueryBlogDto} from "./dto/queryBlog.dto.js";
 
 @Injectable()
 export class BlogService {
@@ -12,10 +13,12 @@ export class BlogService {
     constructor(@InjectModel(Blog.name) private readonly blogModel: Model<Blog>) {
     }
 
-    async getAll() {
+    async getAll(query: QueryBlogDto) {
+
+        const {page, limit} = query;
 
         try {
-            return await this.blogModel.find()
+            return await this.blogModel.find().skip(page - 1).limit(limit)
         } catch (e) {
             throw new NotFoundException()
         }
@@ -46,7 +49,7 @@ export class BlogService {
 
     async update(id: string, data: UpdateBlogDto) {
         try {
-            const updated = await this.blogModel.findByIdAndUpdate(id, data, {returnDocument:"after"})
+            const updated = await this.blogModel.findByIdAndUpdate(id, data, {returnDocument: "after"})
             if (!updated) throw new NotFoundException(`Blog ${id} not found`)
             return updated
         } catch (e) {
