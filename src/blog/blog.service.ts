@@ -1,8 +1,9 @@
-import {BlogDto} from "./dto/blog.dto.js";
+import {CreateBlogDto} from "./dto/createBlog.dto.js";
 import {InjectModel} from "@nestjs/mongoose";
 import {Blog} from "./schemas/blog.schema.js";
 import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common";
 import {Model} from 'mongoose';
+import {UpdateBlogDto} from "./dto/updateBlog.dto.js";
 
 @Injectable()
 export class BlogService {
@@ -21,11 +22,18 @@ export class BlogService {
 
     }
 
-    getOne(id: string) {
-        return `get blog by ID =>${id}`
+    async getOne(id: string) {
+
+        try {
+            return await this.blogModel.findById(id);
+        } catch (e) {
+            return new NotFoundException()
+        }
+
+
     }
 
-    async create(data: BlogDto) {
+    async create(data: CreateBlogDto) {
 
         try {
             const newBlog = new this.blogModel(data);
@@ -36,8 +44,15 @@ export class BlogService {
         }
     }
 
-    update(id: string) {
-        return `update ${id}`
+    async update(id: string, data: UpdateBlogDto) {
+        try {
+            const updated = await this.blogModel.findByIdAndUpdate(id, data, {returnDocument:"after"})
+            if (!updated) throw new NotFoundException(`Blog ${id} not found`)
+            return updated
+        } catch (e) {
+            if (e instanceof NotFoundException) throw e
+            throw new BadRequestException(e instanceof Error ? e.message : e)
+        }
     }
 
     delete(id: string) {

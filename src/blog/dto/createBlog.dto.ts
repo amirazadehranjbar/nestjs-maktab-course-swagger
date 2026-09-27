@@ -1,7 +1,7 @@
 import {IsNotEmpty, IsString} from "class-validator";
 import {ApiProperty} from "@nestjs/swagger";
 
-export class BlogDto {
+export class CreateBlogDto {
 
     @ApiProperty({type:"string", example:"title 1"})
     @IsString()
