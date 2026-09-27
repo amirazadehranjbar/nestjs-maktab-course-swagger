@@ -18,7 +18,7 @@ export class BlogService {
         const {page, limit} = query;
 
         try {
-            const blogsCount = this.blogModel.countDocuments();
+            const blogsCount = await this.blogModel.countDocuments();
             const blog = await this.blogModel.find().skip(page - 1).limit(limit);
             return {blogsCount, blog}
         } catch (e) {

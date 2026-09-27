@@ -1,8 +1,6 @@
-import {BadRequestException, Body, Controller, Get, Param, Post, Put, Query} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Put, Query} from '@nestjs/common';
 import {BlogService} from "./blog.service.js";
 import {CreateBlogDto} from "./dto/createBlog.dto.js";
-import {ApiBody, ApiResponse} from "@nestjs/swagger";
-import {BlogSchema} from "./schemas/blog.schema.js";
 import {UpdateBlogDto} from "./dto/updateBlog.dto.js";
 import {QueryBlogDto} from "./dto/queryBlog.dto.js";
 
