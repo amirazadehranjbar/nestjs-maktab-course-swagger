@@ -18,7 +18,9 @@ export class BlogService {
         const {page, limit} = query;
 
         try {
-            return await this.blogModel.find().skip(page - 1).limit(limit)
+            const blogsCount = this.blogModel.countDocuments();
+            const blog = await this.blogModel.find().skip(page - 1).limit(limit);
+            return {blogsCount, blog}
         } catch (e) {
             throw new NotFoundException()
         }
