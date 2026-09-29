@@ -1,6 +1,6 @@
 import {IsEnum, IsNumber, IsOptional, IsString} from "class-validator";
 import {ApiProperty} from "@nestjs/swagger";
-import {orderEnum, sortEnum} from "./searchBlog.dto.js";
+import {orderEnum, sortEnum} from "../../utils/blogEnums.dto.js";
 
 
 export class QueryBlogDto {

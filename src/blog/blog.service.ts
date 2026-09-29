@@ -5,7 +5,7 @@ import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common
 import {Model, QueryFilter, SortOrder} from 'mongoose';
 import {UpdateBlogDto} from "./dto/updateBlog.dto.js";
 import {QueryBlogDto} from "./dto/queryBlog.dto.js";
-import {orderEnum, sortEnum} from "./dto/searchBlog.dto.js";
+import {orderEnum, sortEnum} from "../utils/blogEnums.dto.js";
 
 
 @Injectable()

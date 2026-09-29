@@ -4,7 +4,7 @@ import {CreateBlogDto} from "./dto/createBlog.dto.js";
 import {UpdateBlogDto} from "./dto/updateBlog.dto.js";
 import {QueryBlogDto} from "./dto/queryBlog.dto.js";
 import {ApiProperty} from "@nestjs/swagger";
-import {sortEnum} from "./dto/searchBlog.dto.js";
+import {sortEnum} from "../utils/blogEnums.dto.js";
 
 @Controller('blog')
 export class BlogController {
