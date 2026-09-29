@@ -3,6 +3,8 @@ import {BlogService} from "./blog.service.js";
 import {CreateBlogDto} from "./dto/createBlog.dto.js";
 import {UpdateBlogDto} from "./dto/updateBlog.dto.js";
 import {QueryBlogDto} from "./dto/queryBlog.dto.js";
+import {ApiProperty} from "@nestjs/swagger";
+import {sortEnum} from "./dto/searchBlog.dto.js";
 
 @Controller('blog')
 export class BlogController {

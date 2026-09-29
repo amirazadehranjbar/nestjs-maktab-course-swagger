@@ -2,9 +2,10 @@ import {CreateBlogDto} from "./dto/createBlog.dto.js";
 import {InjectModel} from "@nestjs/mongoose";
 import {Blog} from "./schemas/blog.schema.js";
 import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common";
-import {Model , QueryFilter} from 'mongoose';
+import {Model, QueryFilter, SortOrder} from 'mongoose';
 import {UpdateBlogDto} from "./dto/updateBlog.dto.js";
 import {QueryBlogDto} from "./dto/queryBlog.dto.js";
+import {orderEnum, sortEnum} from "./dto/searchBlog.dto.js";
 
 
 @Injectable()
@@ -16,18 +17,31 @@ export class BlogService {
 
     async getAll(query: QueryBlogDto) {
 
-        const {page = 1, limit = 10 , title} = query;
+        const {page = 1, limit = 10, title, sortBy = sortEnum.CreatedAt, order = orderEnum.Desc} = query;
 
-        const searchQuery:QueryFilter<Blog> = {}
+        const searchQuery: QueryFilter<Blog> = {}
 
-        if (title){
-            searchQuery.title = {$regex:title , $options:"i"};
+        if (title) {
+            searchQuery.title = {$regex: title, $options: "i"};
         }
+
+
+        // sortBy is already validated by @IsEnum, so it's always a real schema field.
+        // The enum values match the field names, so they can be the sort key directly.
+        const sortObject: Record<string, SortOrder> = {[sortBy]: order === orderEnum.Asc ? 1 : -1}
+
 
         try {
             const blogsCount = await this.blogModel.countDocuments(searchQuery);
-            const blog = await this.blogModel.find(searchQuery).skip(page - 1).limit(limit);
+
+            const blog = await this.blogModel
+                .find(searchQuery)
+                .skip(page - 1)
+                .limit(limit)
+                .sort(sortObject);
+
             return {blogsCount, blog}
+
         } catch (e) {
             throw new NotFoundException()
         }

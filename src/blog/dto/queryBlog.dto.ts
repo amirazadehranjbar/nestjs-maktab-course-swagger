@@ -1,5 +1,7 @@
-import {IsNumber, IsOptional, IsString} from "class-validator";
+import {IsEnum, IsNumber, IsOptional, IsString} from "class-validator";
 import {ApiProperty} from "@nestjs/swagger";
+import {orderEnum, sortEnum} from "./searchBlog.dto.js";
+
 
 export class QueryBlogDto {
 
@@ -17,4 +19,14 @@ export class QueryBlogDto {
     @IsOptional()
     @IsString()
     title: string
+
+    @ApiProperty({required: false, enum: sortEnum, default: sortEnum.CreatedAt})
+    @IsOptional()
+    @IsEnum(sortEnum)
+    sortBy: sortEnum
+
+    @ApiProperty({required: false, enum: orderEnum, default: orderEnum.Desc})
+    @IsOptional()
+    @IsEnum(orderEnum)
+    order: orderEnum
 }
