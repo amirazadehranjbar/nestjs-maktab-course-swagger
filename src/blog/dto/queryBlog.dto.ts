@@ -1,6 +1,6 @@
 import {IsEnum, IsNumber, IsOptional, IsString} from "class-validator";
 import {ApiProperty} from "@nestjs/swagger";
-import {orderEnum, sortEnum} from "../../utils/blogEnums.dto.js";
+import {orderEnum, selectQueryEnum, sortEnum} from "../../utils/blogEnums.dto.js";
 
 
 export class QueryBlogDto {
@@ -29,4 +29,10 @@ export class QueryBlogDto {
     @IsOptional()
     @IsEnum(orderEnum)
     order: orderEnum
+
+
+    @ApiProperty({required:false , enum:selectQueryEnum , default : selectQueryEnum.all})
+    @IsOptional()
+    @IsEnum(selectQueryEnum)
+    select:selectQueryEnum
 }

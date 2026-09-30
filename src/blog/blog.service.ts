@@ -5,7 +5,8 @@ import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common
 import {Model, QueryFilter, SortOrder} from 'mongoose';
 import {UpdateBlogDto} from "./dto/updateBlog.dto.js";
 import {QueryBlogDto} from "./dto/queryBlog.dto.js";
-import {orderEnum, sortEnum} from "../utils/blogEnums.dto.js";
+import {isSelectedQueryEnum, orderEnum, selectQueryEnum, sortEnum} from "../utils/blogEnums.dto.js";
+
 
 
 @Injectable()
@@ -17,7 +18,14 @@ export class BlogService {
 
     async getAll(query: QueryBlogDto) {
 
-        const {page = 1, limit = 10, title, sortBy = sortEnum.CreatedAt, order = orderEnum.Desc} = query;
+        const {
+            page = 1,
+            limit = 10,
+            title,
+            sortBy = sortEnum.CreatedAt,
+            order = orderEnum.Desc,
+            select = selectQueryEnum.all,
+        } = query;
 
         const searchQuery: QueryFilter<Blog> = {}
 
@@ -30,6 +38,8 @@ export class BlogService {
         // The enum values match the field names, so they can be the sort key directly.
         const sortObject: Record<string, SortOrder> = {[sortBy]: order === orderEnum.Asc ? 1 : -1}
 
+        const selectObject: Record<string, number> = {[select] : isSelectedQueryEnum.selected  ? 1 :0}
+
 
         try {
             const blogsCount = await this.blogModel.countDocuments(searchQuery);
@@ -38,7 +48,8 @@ export class BlogService {
                 .find(searchQuery)
                 .skip(page - 1)
                 .limit(limit)
-                .sort(sortObject);
+                .sort(sortObject)
+                .select(selectObject);
 
             return {blogsCount, blog}
 
