@@ -1,11 +1,11 @@
-import {CreateBlogDto} from "./dto/createBlog.dto.js";
+import {CreateBlogDto} from "../dto/createBlog.dto.js";
 import {InjectModel} from "@nestjs/mongoose";
-import {Blog} from "./schemas/blog.schema.js";
+import {Blog} from "../schemas/blog.schema.js";
 import {BadRequestException, Injectable, NotFoundException} from "@nestjs/common";
 import {Model, QueryFilter, SortOrder} from 'mongoose';
-import {UpdateBlogDto} from "./dto/updateBlog.dto.js";
-import {QueryBlogDto} from "./dto/queryBlog.dto.js";
-import {isSelectedQueryEnum, orderEnum, selectQueryEnum, sortEnum} from "../utils/blogEnums.dto.js";
+import {UpdateBlogDto} from "../dto/updateBlog.dto.js";
+import {QueryBlogDto} from "../dto/queryBlog.dto.js";
+import {isSelectedQueryEnum, orderEnum, selectQueryEnum, sortEnum} from "../../utils/blogEnums.dto.js";
 
 
 
@@ -49,7 +49,8 @@ export class BlogService {
                 .skip(page - 1)
                 .limit(limit)
                 .sort(sortObject)
-                .select(selectObject);
+                .select(selectObject)
+                .populate("category" ,  'name icon -_id');
 
             return {blogsCount, blog}
 

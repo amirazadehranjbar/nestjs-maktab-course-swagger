@@ -1,10 +1,10 @@
 import {Body, Controller, Get, Param, Post, Put, Query} from '@nestjs/common';
-import {BlogService} from "./blog.service.js";
-import {CreateBlogDto} from "./dto/createBlog.dto.js";
-import {UpdateBlogDto} from "./dto/updateBlog.dto.js";
-import {QueryBlogDto} from "./dto/queryBlog.dto.js";
+import {BlogService} from "../services/blog.service.js";
+import {CreateBlogDto} from "../dto/createBlog.dto.js";
+import {UpdateBlogDto} from "../dto/updateBlog.dto.js";
+import {QueryBlogDto} from "../dto/queryBlog.dto.js";
 import {ApiProperty} from "@nestjs/swagger";
-import {sortEnum} from "../utils/blogEnums.dto.js";
+import {sortEnum} from "../../utils/blogEnums.dto.js";
 
 @Controller('blog')
 export class BlogController {

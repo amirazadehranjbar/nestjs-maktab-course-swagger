@@ -18,3 +18,10 @@ export enum selectQueryEnum {
 export enum isSelectedQueryEnum {
     selected = 0
 }
+
+export enum blogCategoriesEnum {
+    all= "all",
+    ai = "ai",
+    programming = "programming",
+    datascience = "datascience"
+}

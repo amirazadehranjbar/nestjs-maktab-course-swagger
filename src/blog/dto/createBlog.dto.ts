@@ -1,15 +1,20 @@
-import {IsNotEmpty, IsString} from "class-validator";
-import {ApiProperty} from "@nestjs/swagger";
+import {IsNotEmpty, IsString, ValidateNested} from "class-validator";
+import {CreateBlogCategoryDto} from "./create-blog-category.dto.js";
+import {Type} from "class-transformer";
+import {BlogCategory} from "../schemas/blog-category.scehma.js";
 
 export class CreateBlogDto {
 
-    @ApiProperty({type:"string", example:"title 1"})
     @IsString()
     @IsNotEmpty()
     title: string
 
-    @ApiProperty({type:"string" , example:"content 1"})
+
     @IsString()
     @IsNotEmpty()
     content: string
+
+    @Type(() => CreateBlogCategoryDto)     // Tells class-transformer how to deserialize the object
+    @IsNotEmpty()
+    category: BlogCategory
 }

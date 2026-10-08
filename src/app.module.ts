@@ -5,6 +5,8 @@ import {AppService} from './app.service.js';
 import {BlogModule} from './blog/blog.module.js';
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {MongooseModule} from "@nestjs/mongoose";
+import { BlogCategoriesModule } from './blog/blog-categories.module.js';
+
 
 export const {ObserveModule, ObserveInstrument} = createObserveModule();
 
@@ -26,6 +28,7 @@ export const {ObserveModule, ObserveInstrument} = createObserveModule();
             serviceId: 'maktab-course-swagger',
         }),
         BlogModule,
+        BlogCategoriesModule,
     ],
     controllers: [AppController],
     providers: [AppService],
